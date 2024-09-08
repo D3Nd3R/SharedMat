@@ -13,11 +13,13 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 
 set(header_interface
-
+    include/SharedCvMat/SharedReceiver.hpp
+    include/SharedCvMat/SharedSender.hpp
 )
 
 set(src
-    src/stub.cpp
+    src/SharedReceiver.cpp
+    src/SharedSender.cpp
 )
 
 
