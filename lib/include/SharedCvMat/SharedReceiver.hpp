@@ -15,9 +15,9 @@ namespace shared_cv_mat
 class SharedReceiver
 {
 public:
-    SharedReceiver(const std::string& name, OpenMode openMode, cv::Size size, int type);
+    SharedReceiver(const std::string& name, OpenMode openMode, cv::Size size, int type) noexcept(false);
 
-    cv::Mat Retrieve();
+    cv::Mat Retrieve() noexcept(false);
 
     ~SharedReceiver();
 

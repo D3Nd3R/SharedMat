@@ -47,7 +47,7 @@ bool SharedSender::Send(const cv::Mat& image)
 boost::interprocess::managed_shared_memory SharedSender::OperOrCreate(const std::string& name, OpenMode) noexcept(false)
 {
     const int data_size = _sharedImg.total() * _sharedImg.elemSize();
-    return boost::interprocess::managed_shared_memory(boost::interprocess::open_or_create, name.c_str(),
+    return boost::interprocess::managed_shared_memory(boost::interprocess::create_only, name.c_str(),
                                                       1 * data_size + sizeof(Header) + 1024);
 }
 } // namespace shared_cv_mat

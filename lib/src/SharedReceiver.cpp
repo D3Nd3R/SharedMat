@@ -6,7 +6,7 @@
 
 namespace shared_cv_mat
 {
-SharedReceiver::SharedReceiver(const std::string& name, OpenMode , cv::Size , int )
+SharedReceiver::SharedReceiver(const std::string& name, OpenMode, cv::Size, int)
 {
     _msm = boost::interprocess::managed_shared_memory(boost::interprocess::open_or_create, name.c_str(), 10000 * 1024);
     _sharedHeader = _msm.find<Header>("Header").first;
@@ -22,15 +22,20 @@ cv::Mat SharedReceiver::Retrieve()
     {
         _sharedHeader->newDataReady = 0;
         _sharedImg.copyTo(localImg);
-
     }
     return localImg;
 }
 
 SharedReceiver::~SharedReceiver()
 {
-    if (_sharedHeader)
-        _sharedHeader->activeConnect = 0;
+    try
+    {
+        if (_sharedHeader)
+            _sharedHeader->activeConnect = 0;
+    }
+    catch (...)
+    {
+    }
 }
 
 } // namespace shared_cv_mat
