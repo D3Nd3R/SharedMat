@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(Receiver VERSION 1.0.0 LANGUAGES CXX)
+project(ReceiverObj VERSION 1.0.0 LANGUAGES CXX)
 
 message(TRACE "========= Start configure: ${PROJECT_NAME}")
 
@@ -14,17 +14,18 @@ set(src
     receiver.cpp
 )
 
-add_executable(Receiver
+add_executable(ReceiverObj
     ${src}
 )
 
-target_compile_options(Receiver PRIVATE
+target_compile_options(ReceiverObj PRIVATE
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
     -Wall -Wextra -Wpedantic>)
 
-target_link_libraries(Receiver
+target_link_libraries(ReceiverObj
     PRIVATE
     ${OpenCV_LIBS}
+    SharedCvMat::sharedcvmat
 )
 
 message(TRACE "========= Finish configure: ${PROJECT_NAME}")

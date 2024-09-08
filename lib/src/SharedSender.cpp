@@ -4,7 +4,10 @@
 namespace shared_cv_mat
 {
 SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size size, int type)
+    : _name { name }
 {
+    boost::interprocess::shared_memory_object::remove(_name.c_str());
+
     _localHeader.size = size;
     _localHeader.type = type;
     _localHeader.activeConnect = 0;
@@ -26,12 +29,18 @@ SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size 
         cv::Mat(_localHeader.size, _localHeader.type, _managed_shm.get_address_from_handle(_localHeader.handle));
 }
 
+SharedSender::~SharedSender()
+{
+    boost::interprocess::shared_memory_object::remove(_name.c_str());
+}
+
 bool SharedSender::Send(const cv::Mat& image)
 {
     if (image.type() != _localHeader.type || image.size() != _localHeader.size)
         return false;
 
     image.copyTo(_sharedImg);
+    _sharedHeader->newDataReady = 1;
     return true;
 }
 

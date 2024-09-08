@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(Sender VERSION 1.0.0 LANGUAGES CXX)
+project(SenderObj VERSION 1.0.0 LANGUAGES CXX)
 
 message(TRACE "========= Start configure: ${PROJECT_NAME}")
 
@@ -14,17 +14,18 @@ set(src
     sender.cpp
 )
 
-add_executable(Sender
+add_executable(SenderObj
     ${src}
 )
 
-target_compile_options(Sender PRIVATE
+target_compile_options(SenderObj PRIVATE
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
     -Wall -Wextra -Wpedantic>)
 
-target_link_libraries(Sender
+target_link_libraries(SenderObj
     PRIVATE
     ${OpenCV_LIBS}
+    SharedCvMat::sharedcvmat
 )
 
 message(TRACE "========= Finish configure: ${PROJECT_NAME}")

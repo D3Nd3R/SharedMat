@@ -18,6 +18,8 @@ private:
 public:
     explicit SharedSender(const std::string& name, OpenMode openMode, cv::Size size, int type);
 
+    ~SharedSender();
+
     bool Send(const cv::Mat& image);
 
 private:
@@ -25,6 +27,7 @@ private:
 
 private:
     boost::interprocess::managed_shared_memory _managed_shm;
+    std::string _name;
 
     cv::Mat _sharedImg;
 
