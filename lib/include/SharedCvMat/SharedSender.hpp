@@ -6,6 +6,7 @@
 #include <opencv2/core/mat.hpp>
 
 #include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/sync/named_mutex.hpp>
 
 #include <string>
 
@@ -23,11 +24,13 @@ public:
     bool Send(const cv::Mat& image);
 
 private:
-    boost::interprocess::managed_shared_memory OperOrCreate(const std::string& name, OpenMode openMode) noexcept(false);
+    boost::interprocess::managed_shared_memory OpenOrCreate(const std::string& name, OpenMode openMode) noexcept(false);
 
 private:
     boost::interprocess::managed_shared_memory _managed_shm;
     std::string _name;
+    std::string _mtx_name;
+    boost::interprocess::named_mutex _mtx;
 
     cv::Mat _sharedImg;
 

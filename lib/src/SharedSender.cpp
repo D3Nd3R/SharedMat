@@ -1,11 +1,16 @@
 
 #include <SharedCvMat/SharedSender.hpp>
 
+#include <mutex>
+
 namespace shared_cv_mat
 {
 SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size size, int type)
     : _name { name }
+    , _mtx_name { _name + "_mutex" }
+    , _mtx { boost::interprocess::open_or_create, _mtx_name.c_str() }
 {
+    std::string mtx_name { _name + "_mutex" };
     boost::interprocess::shared_memory_object::remove(_name.c_str());
 
     _localHeader.size = size;
@@ -14,8 +19,9 @@ SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size 
 
     _sharedImg = cv::Mat::zeros(size, type);
 
-    _managed_shm = OperOrCreate(name, openMode);
+    _managed_shm = OpenOrCreate(name, openMode);
 
+    std::lock_guard lock(_mtx);
     _sharedHeader = _managed_shm.find_or_construct<Header>("Header")();
 
     const int data_size = _sharedImg.total() * _sharedImg.elemSize();
@@ -32,10 +38,12 @@ SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size 
 SharedSender::~SharedSender()
 {
     boost::interprocess::shared_memory_object::remove(_name.c_str());
+    boost::interprocess::named_mutex::remove(_mtx_name.c_str());
 }
 
 bool SharedSender::Send(const cv::Mat& image)
 {
+    std::lock_guard lock(_mtx);
     if (image.type() != _localHeader.type || image.size() != _localHeader.size)
         return false;
 
@@ -44,7 +52,7 @@ bool SharedSender::Send(const cv::Mat& image)
     return true;
 }
 
-boost::interprocess::managed_shared_memory SharedSender::OperOrCreate(const std::string& name, OpenMode) noexcept(false)
+boost::interprocess::managed_shared_memory SharedSender::OpenOrCreate(const std::string& name, OpenMode) noexcept(false)
 {
     const int data_size = _sharedImg.total() * _sharedImg.elemSize();
     return boost::interprocess::managed_shared_memory(boost::interprocess::create_only, name.c_str(),

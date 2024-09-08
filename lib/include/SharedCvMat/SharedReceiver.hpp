@@ -6,6 +6,7 @@
 #include <opencv2/core/types.hpp>
 
 #include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/sync/named_mutex.hpp>
 
 #include <string>
 
@@ -24,6 +25,8 @@ public:
 private:
     boost::interprocess::managed_shared_memory _msm;
     Header* _sharedHeader { nullptr };
+    std::string _mtx_name;
+    boost::interprocess::named_mutex _mtx;
 
     cv::Mat _sharedImg;
 };
