@@ -6,7 +6,7 @@
 
 namespace shared_cv_mat
 {
-SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size size, int type)
+SharedSender::SharedSender(const std::string& name, cv::Size size, int type)
     : _name { name }
     , _mtx_name { _name + details::MutexSuffix() }
     , _mtx { boost::interprocess::open_or_create, _mtx_name.c_str() }
@@ -19,13 +19,14 @@ SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size 
 
     _sharedImg = cv::Mat::zeros(size, type);
 
-    _managed_shm = OpenOrCreate(name, openMode);
+    const int data_size = _sharedImg.total() * _sharedImg.elemSize();
+    _managed_shm = boost::interprocess::managed_shared_memory(boost::interprocess::create_only, name.c_str(),
+                                                              1 * data_size + sizeof(Header) + 1024);
 
     std::lock_guard lock(_mtx);
     _sharedHeader = _managed_shm.find_or_construct<Header>("Header")();
 
-    const int data_size = _sharedImg.total() * _sharedImg.elemSize();
-    const Header* shared_image_data_ptr { (Header*)_managed_shm.allocate(data_size) };
+    const Header* shared_image_data_ptr { static_cast<Header*>(_managed_shm.allocate(data_size)) };
 
     _localHeader.handle = _managed_shm.get_handle_from_address(shared_image_data_ptr);
 
@@ -50,12 +51,5 @@ bool SharedSender::Send(const cv::Mat& image)
     image.copyTo(_sharedImg);
     _sharedHeader->newDataReady = 1;
     return true;
-}
-
-boost::interprocess::managed_shared_memory SharedSender::OpenOrCreate(const std::string& name, OpenMode) noexcept(false)
-{
-    const int data_size = _sharedImg.total() * _sharedImg.elemSize();
-    return boost::interprocess::managed_shared_memory(boost::interprocess::create_only, name.c_str(),
-                                                      1 * data_size + sizeof(Header) + 1024);
 }
 } // namespace shared_cv_mat
