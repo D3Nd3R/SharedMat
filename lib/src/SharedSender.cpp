@@ -1,5 +1,6 @@
 
 #include <SharedCvMat/SharedSender.hpp>
+#include <Utils.hpp>
 
 #include <mutex>
 
@@ -7,10 +8,9 @@ namespace shared_cv_mat
 {
 SharedSender::SharedSender(const std::string& name, OpenMode openMode, cv::Size size, int type)
     : _name { name }
-    , _mtx_name { _name + "_mutex" }
+    , _mtx_name { _name + details::MutexSuffix() }
     , _mtx { boost::interprocess::open_or_create, _mtx_name.c_str() }
 {
-    std::string mtx_name { _name + "_mutex" };
     boost::interprocess::shared_memory_object::remove(_name.c_str());
 
     _localHeader.size = size;

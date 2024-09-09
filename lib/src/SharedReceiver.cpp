@@ -3,13 +3,14 @@
 //
 
 #include <SharedCvMat/SharedReceiver.hpp>
+#include <Utils.hpp>
 
 #include <mutex>
 
 namespace shared_cv_mat
 {
 SharedReceiver::SharedReceiver(const std::string& name, OpenMode, cv::Size, int)
-    : _mtx_name(name + "_mutex")
+    : _mtx_name(name + details::MutexSuffix())
     , _mtx { boost::interprocess::open_or_create, _mtx_name.c_str() }
 {
     std::lock_guard lock { _mtx };
@@ -20,25 +21,24 @@ SharedReceiver::SharedReceiver(const std::string& name, OpenMode, cv::Size, int)
     _sharedHeader->activeConnect = 1;
 }
 
-cv::Mat SharedReceiver::Retrieve()
+bool SharedReceiver::Retrieve(cv::OutputArray img)
 {
-    cv::Mat localImg;
+    std::lock_guard lock { _mtx };
+    if (_sharedHeader && _sharedHeader->newDataReady)
     {
-        std::lock_guard lock { _mtx };
-        if (_sharedHeader && _sharedHeader->newDataReady)
-        {
-            _sharedHeader->newDataReady = 0;
-            _sharedImg.copyTo(localImg);
-        }
+        _sharedHeader->newDataReady = 0;
+        _sharedImg.copyTo(img);
+        return true;
     }
-    return localImg;
+
+    return false;
 }
 
 SharedReceiver::~SharedReceiver()
 {
     try
     {
-        std::lock_guard lock{_mtx};
+        std::lock_guard lock { _mtx };
         if (_sharedHeader)
             _sharedHeader->activeConnect = 0;
     }

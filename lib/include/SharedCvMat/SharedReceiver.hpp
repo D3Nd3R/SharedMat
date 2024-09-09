@@ -18,7 +18,7 @@ class SharedReceiver
 public:
     SharedReceiver(const std::string& name, OpenMode openMode, cv::Size size, int type) noexcept(false);
 
-    cv::Mat Retrieve() noexcept(false);
+    bool Retrieve(cv::OutputArray img) noexcept(false);
 
     ~SharedReceiver();
 

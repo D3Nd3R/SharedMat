@@ -1,23 +1,11 @@
-#include "../common/common.hpp"
-
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/opencv.hpp>
-
-#include <boost/interprocess/managed_shared_memory.hpp>
-#include <boost/program_options.hpp>
-
-#include <chrono>
-#include <iostream>
-#include <thread>
-#define NOBUG 1
 
 #include <SharedCvMat/SharedSender.hpp>
 
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+
 int main()
 {
-
     cv::VideoCapture cap;
     if (!cap.open(0))
     {

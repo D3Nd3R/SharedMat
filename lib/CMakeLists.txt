@@ -20,6 +20,7 @@ set(header_interface
 set(src
     src/SharedReceiver.cpp
     src/SharedSender.cpp
+    src/Utils.cpp
 )
 
 
