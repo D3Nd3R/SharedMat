@@ -9,7 +9,7 @@
 
 int main()
 {
-    shared_cv_mat::SharedCapture capture{100};
+    shared_cv_mat::SharedCapture capture { 100 };
 
     int32_t openAttempt = 10000;
     while (!capture.open("mat_sender") && openAttempt > 0)

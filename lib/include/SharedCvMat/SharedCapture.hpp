@@ -35,7 +35,7 @@ public:
 
 private:
     bool _isOpened { false };
-    const size_t _maxFailedRead{ 10 };
+    const size_t _maxFailedRead { 10 };
     std::string _memName;
     std::size_t _failedReadCounter { 0 };
 

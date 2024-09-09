@@ -1,9 +1,7 @@
 #pragma once
 #include "Header.hpp"
-#include "Types.hpp"
 
 #include <opencv2/core/mat.hpp>
-#include <opencv2/core/types.hpp>
 
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/interprocess/sync/named_mutex.hpp>
