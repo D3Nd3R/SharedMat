@@ -1,2 +1,2 @@
-add_subdirectory(senderObj)
-add_subdirectory(receiverObj)
+add_subdirectory(sender)
+add_subdirectory(receiver)

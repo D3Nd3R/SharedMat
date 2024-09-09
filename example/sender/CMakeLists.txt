@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(ReceiverObj VERSION 1.0.0 LANGUAGES CXX)
+project(Sender VERSION 1.0.0 LANGUAGES CXX)
 
 message(TRACE "========= Start configure: ${PROJECT_NAME}")
 
@@ -11,18 +11,18 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 
 set(src
-    receiver.cpp
+    sender.cpp
 )
 
-add_executable(ReceiverObj
+add_executable(Sender
     ${src}
 )
 
-target_compile_options(ReceiverObj PRIVATE
+target_compile_options(Sender PRIVATE
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
     -Wall -Wextra -Wpedantic>)
 
-target_link_libraries(ReceiverObj
+target_link_libraries(Sender
     PRIVATE
     ${OpenCV_LIBS}
     SharedCvMat::sharedcvmat
