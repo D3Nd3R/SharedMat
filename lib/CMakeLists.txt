@@ -15,12 +15,14 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 set(header_interface
     include/SharedCvMat/SharedReceiver.hpp
     include/SharedCvMat/SharedSender.hpp
+    include/SharedCvMat/SharedCapture.hpp
 )
 
 set(src
     src/SharedReceiver.cpp
     src/SharedSender.cpp
     src/Utils.cpp
+    src/SharedCapture.cpp
 )
 
 
