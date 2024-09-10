@@ -9,6 +9,7 @@ namespace shared_cv_mat
 SharedSender::SharedSender(const std::string& name, cv::Size size, int type)
     : _name { name }
     , _mtx_name { _name + details::MutexSuffix() }
+    , _mtxDelete { _mtx_name }
     , _mtx { boost::interprocess::open_or_create, _mtx_name.c_str() }
 {
     boost::interprocess::shared_memory_object::remove(_name.c_str());
