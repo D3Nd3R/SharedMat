@@ -21,8 +21,11 @@ SharedSender::SharedSender(const std::string& name, cv::Size size, int type)
     _sharedImg = cv::Mat::zeros(size, type);
 
     const int data_size = _sharedImg.total() * _sharedImg.elemSize();
+    boost::interprocess::permissions  unrestricted_permissions;
+    unrestricted_permissions.set_unrestricted();
     _managed_shm = boost::interprocess::managed_shared_memory(boost::interprocess::create_only, name.c_str(),
-                                                              1 * data_size + sizeof(Header) + 1024);
+                                                              1 * data_size + sizeof(Header) + 1024, 0,
+                                                              unrestricted_permissions);
 
     std::lock_guard lock(_mtx);
     _sharedHeader = _managed_shm.find_or_construct<Header>("Header")();
