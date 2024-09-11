@@ -9,6 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Threads REQUIRED)
 
 find_package(OpenCV REQUIRED)
+find_package(Boost COMPONENTS system REQUIRED)
+
+FIND_LIBRARY(RT_LIBRARY rt)
+message(${RT_LIBRARY})
+
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 
@@ -48,6 +53,8 @@ target_compile_options(sharedcvmat PRIVATE
 target_link_libraries(sharedcvmat PRIVATE
     ${OpenCV_LIBS}
     Threads::Threads
+    Boost::system
+    ${RT_LIBRARY}
 )
 
 include(GNUInstallDirs)

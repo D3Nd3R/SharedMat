@@ -13,7 +13,7 @@ int main()
     }
 
     const cv::Size size { 1920, 1080 };
-    shared_cv_mat::SharedSender sender { "mat_sender", size, CV_8UC3 };
+    shared_cv_mat::SharedSender sender { "shared_mat_sender", size, CV_8UC3 };
 
     while (cap.isOpened())
     {

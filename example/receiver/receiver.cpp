@@ -5,7 +5,7 @@
 int main()
 {
     const cv::Size size { 1920, 1080 };
-    shared_cv_mat::SharedReceiver receiver { "mat_sender" };
+    shared_cv_mat::SharedReceiver receiver { "shared_mat_sender" };
 
     cv::Mat image;
     while (true)

@@ -12,7 +12,7 @@ int main()
     shared_cv_mat::SharedCapture capture { 100 };
 
     int32_t openAttempt = 10000;
-    while (!capture.open("mat_sender") && openAttempt > 0)
+    while (!capture.open("shared_mat_sender") && openAttempt > 0)
     {
         std::cout << "try open: " << openAttempt-- << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
