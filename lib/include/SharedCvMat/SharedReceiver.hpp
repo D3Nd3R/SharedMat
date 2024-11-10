@@ -26,6 +26,7 @@ private:
     Header* _sharedHeader { nullptr };
     std::string _mtx_name;
     std::optional<boost::interprocess::named_mutex> _mtx;
+    std::chrono::milliseconds _readTime { std::chrono::milliseconds::zero() };
 
     cv::Mat _sharedImg;
 };

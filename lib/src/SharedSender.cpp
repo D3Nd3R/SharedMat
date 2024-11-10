@@ -56,7 +56,8 @@ bool SharedSender::Send(const cv::Mat& image)
         return false;
 
     image.copyTo(_sharedImg);
-    _sharedHeader->newDataReady = 1;
+    _sharedHeader->timestamp =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch());
     return true;
 }
 } // namespace shared_cv_mat

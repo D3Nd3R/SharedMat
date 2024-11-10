@@ -29,10 +29,11 @@ SharedReceiver::SharedReceiver(const std::string& name)
 
 bool SharedReceiver::read(cv::OutputArray img)
 {
+    constexpr std::chrono::milliseconds zero { std::chrono::milliseconds::zero() };
     std::lock_guard lock { *_mtx };
-    if (_sharedHeader && _sharedHeader->newDataReady)
+    if (_sharedHeader && _sharedHeader->timestamp != zero && _sharedHeader->timestamp != _readTime)
     {
-        _sharedHeader->newDataReady = 0;
+        _readTime = _sharedHeader->timestamp;
         _sharedImg.copyTo(img);
         return true;
     }
